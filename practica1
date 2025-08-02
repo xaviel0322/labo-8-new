@@ -1,0 +1,56 @@
+pratica 1
+
+# Borramos las dependencias actuales que se encuentran en nuestro sistema:
+sudo dnf remove docker \
+    docker-client \
+    docker-client-latest \
+    docker-common \
+    docker-latest \
+    docker-latest-logrotate \
+    docker-logrotate \
+    docker-engine \
+    podman \
+    runc
+
+# Agregamos los paquetes y plugins necesarios:
+sudo dnf -y install dnf-plugins-core
+sudo dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+
+# Instalamos nuestra version del docker:
+sudo dnf install --nobest docker-ce-rootless-extras-27.1.2
+
+# Ahora instalaremos el containerd.io de manera manual:
+sudo dnf install -y https://download.docker.com/linux/centos/8/x86_64/stable/Packages/containerd.io-1.6.24-3.1.el8.x86_64.rpm
+
+# Finalmente instalamos la ultima version de docker y lo habilitamos.
+sudo dnf install docker-ce
+sudo systemctl enable --now docker
+systemctl is-active docker
+
+2. Descargamos la imagen de NGINX
+
+docker pull nginx
+
+3. Creamos el contenedor y direccionar los puertos:
+
+# Creamos el directorio
+mkdir -p /home/paginas
+
+docker run -d -p 8888:80 -v /home/paginas:/usr/share/nginx/html --name nginx-container nginx
+
+4. Creamos la pagina index.html con el contenido de la pagina:
+
+sudo nano index.html
+---> <html>
+<head>
+    <title>Pagina DUCKER</title>
+</head>
+<body>
+    <h1>Mi nombre es Elvis xaviel R</h1>
+    <p>Mi matricula es 2022-1881</p>
+</body>
+</html>
+
+
+5. Probamos la pagina:
+192.168.0.200:8888
